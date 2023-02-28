@@ -13,11 +13,9 @@ import java.time.LocalDateTime;
 public class AnimalVisitedLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
+    private Long id;
     @Column(name = "date_time_of_visit_location_point")
     private LocalDateTime dateTimeOfVisitLocationPoint;
-
     @OneToOne
     @JoinColumn(name = "location_point_id", referencedColumnName = "id")
     private LocationPoint locationPoint;

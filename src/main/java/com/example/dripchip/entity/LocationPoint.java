@@ -12,16 +12,13 @@ import java.util.List;
 @Entity
 @Table(name = "location_point")
 public class LocationPoint {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private double latitude;
     private double longitude;
-
     @OneToMany(mappedBy = "chippingLocation")
     private List<Animal> animals;
-
     @OneToOne(mappedBy = "locationPoint")
     private AnimalVisitedLocation animalVisitedLocation;
 }

@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public class AccountRegistrationService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
