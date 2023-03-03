@@ -20,11 +20,14 @@ public class AccountRegistrationService {
     }
 
     @Transactional
-    public void register(Account account) {
+    public Account register(Account account) {
         String encodedPassword = passwordEncoder.encode(account.getPassword());
         account.setPassword(encodedPassword);
-        //account.setRole("ROLE_USER");
 
-        accountRepository.save(account);
+        return accountRepository.save(account);
+    }
+
+    public boolean isEmailAlreadyTaken(String accountEmail) {
+        return accountRepository.getByEmail(accountEmail).isEmpty();
     }
 }

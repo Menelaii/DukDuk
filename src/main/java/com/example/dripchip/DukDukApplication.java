@@ -1,6 +1,8 @@
 package com.example.dripchip;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.config.Configuration;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +17,13 @@ public class DukDukApplication {
 	@Bean
 	public ModelMapper modelMapper(){
 		ModelMapper modelMapper = new ModelMapper();
-		//todo confg
+
+		modelMapper
+				.getConfiguration()
+				.setFieldMatchingEnabled(true)
+				.setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
+				.setMatchingStrategy(MatchingStrategies.STANDARD);
+
 		return modelMapper;
 	}
 

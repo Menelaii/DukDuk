@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AccountDTO extends ShortAccountDTO {
-    private int id;
+public class AccountRegDTO extends ShortAccountDTO {
+    private String password;
 }

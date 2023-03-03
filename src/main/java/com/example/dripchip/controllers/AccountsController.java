@@ -22,7 +22,6 @@ public class AccountsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AccountDTO> findOne(@PathVariable("id") Integer id) {
-        //todo 401 неверные авторизационные данные
         if( id == null || id <= 0){
             return  new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }

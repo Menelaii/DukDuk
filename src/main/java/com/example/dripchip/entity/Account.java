@@ -21,6 +21,7 @@ public class Account {
     private String lastName;
     @Column(name = "email", nullable = false, length = 255)
     private String email;
+    @Column(name = "email", nullable = false, length = 255)
     private String password;
     @OneToMany(mappedBy = "chipper")
     private List<Animal> animals;
