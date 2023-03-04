@@ -1,118 +1,77 @@
 package com.example.dripchip.repositories;
 
+import com.example.dripchip.SearchCriterias.AccountSearchCriteria;
 import com.example.dripchip.SearchCriterias.LocationPointSearchCriteria;
+import com.example.dripchip.SearchCriterias.XPage;
+import com.example.dripchip.entities.Account;
 import com.example.dripchip.entities.LocationPoint;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 public class LocationPointsCriteriaRepository {
     @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder criteriaBuilder;
+    private CriteriaBuilder cb;
 
     public LocationPointsCriteriaRepository() {
-        criteriaBuilder = entityManager.getCriteriaBuilder();
+        cb = entityManager.getCriteriaBuilder();
     }
 
-    public Page<LocationPoint> findAllWithFilters(Long id,
-                                                  LocationPointSearchCriteria searchCriteria) {
-        CriteriaQuery<LocationPoint> criteriaQuery = criteriaBuilder.createQuery(LocationPoint.class);
-        Root<LocationPoint> root = criteriaQuery.from(LocationPoint.class);
-        Predicate predicate = getPredicate(searchCriteria, root);
+    public List<Account> findWithFilters(XPage page, LocationPointSearchCriteria searchCriteria) {
+        CriteriaQuery<Account> criteriaQuery = cb.createQuery(Account.class);
+        Root<Account> root = criteriaQuery.from(Account.class);
+        jakarta.persistence.criteria.Predicate predicate = getPredicate(searchCriteria, root);
         criteriaQuery.where(predicate);
-        setOrder(furniturePage, criteriaQuery, root);
+        setOrder(page, criteriaQuery, root);
 
-        TypedQuery<Furniture> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(furniturePage.getPage() * furniturePage.getItemsPerPage());
-        typedQuery.setMaxResults(furniturePage.getItemsPerPage());
+        TypedQuery<Account> typedQuery = entityManager.createQuery(criteriaQuery);
+        typedQuery.setFirstResult(page.getFrom());
+        typedQuery.setMaxResults(page.getSize());
 
-        Pageable pageable = createPageable(furniturePage);
-
-        long furnitureTotalCount = getFurnitureTotalCountWith(predicate);
-
-        return new PageImpl<Furniture>(typedQuery.getResultList(), pageable, furnitureTotalCount);
+        return typedQuery.getResultList();
     }
 
-    private long getFurnitureTotalCountWith(Predicate predicate) {
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<Furniture> root = countQuery.from(Furniture.class);
-        countQuery.select(criteriaBuilder.count(root)).where(predicate);
-        return entityManager.createQuery(countQuery).getSingleResult();
-    }
-
-    private void setOrder(FurniturePage furniturePage,
-                          CriteriaQuery<Furniture> criteriaQuery, Root<Furniture> root) {
-        if (furniturePage.getSortDirection().equals(Sort.Direction.DESC)) {
-            criteriaQuery.orderBy(criteriaBuilder.desc(root.get(furniturePage.getSortBy())));
+    private void setOrder(XPage page, CriteriaQuery<Account> criteriaQuery, Root<Account> root) {
+        if (page.getSortDirection().equals(Sort.Direction.DESC)) {
+            criteriaQuery.orderBy(cb.desc(root.get(page.getSortBy())));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.asc(root.get(furniturePage.getSortBy())));
+            criteriaQuery.orderBy(cb.asc(root.get(page.getSortBy())));
         }
     }
 
-    private Pageable createPageable(FurniturePage furniturePage) {
-        Sort sort = Sort.by(furniturePage.getSortDirection(), furniturePage.getSortBy());
-        return PageRequest.of(furniturePage.getPage(), furniturePage.getItemsPerPage(), sort);
-    }
-
-    public Predicate getPredicate(FurnitureSearchCriteria furnitureSearchCriteria,
-                                  Root<Furniture> root) {
+    private Predicate getPredicate(LocationPointSearchCriteria searchCriteria, Root<Account> root) {
         List<Predicate> predicates = new ArrayList<>();
 
-        if (Objects.nonNull(furnitureSearchCriteria.getFurnitureTypeId())) {
+        Path<String> firstName = root.get("firstName");
+        Path<String> lastName = root.get("lastName");
+        Path<String> email = root.get("email");
+
+        if (Objects.nonNull(searchCriteria.getFirstName())) {
             predicates.add(
-                    criteriaBuilder.equal(root.get("furnitureType").get("id"), furnitureSearchCriteria.getFurnitureTypeId())
+                    cb.like(cb.lower(firstName), "%"+searchCriteria.getFirstName().toLowerCase()+"%")
             );
         }
 
-        if (Objects.nonNull(furnitureSearchCriteria.getForm())) {
+        if (Objects.nonNull(searchCriteria.getLastName())) {
             predicates.add(
-                    criteriaBuilder.equal(root.get("form"), furnitureSearchCriteria.getForm())
+                    cb.like(cb.lower(lastName), "%"+searchCriteria.getLastName().toLowerCase()+"%")
             );
         }
 
-        if (Objects.nonNull(furnitureSearchCriteria.getPriceMin())) {
+        if (Objects.nonNull(searchCriteria.getEmail())) {
             predicates.add(
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("price"), furnitureSearchCriteria.getPriceMin())
+                    cb.like(cb.lower(email), "%"+searchCriteria.getEmail().toLowerCase()+"%")
             );
         }
 
-        if (Objects.nonNull(furnitureSearchCriteria.getPriceMax())) {
-            predicates.add(
-                    criteriaBuilder.lessThanOrEqualTo(root.get("price"), furnitureSearchCriteria.getPriceMax())
-            );
-        }
-
-        if (Objects.nonNull(furnitureSearchCriteria.getLength())) {
-            predicates.add(
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("length"), furnitureSearchCriteria.getLength())
-            );
-        }
-
-        if (Objects.nonNull(furnitureSearchCriteria.getWidth())) {
-            predicates.add(
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("width"), furnitureSearchCriteria.getWidth())
-            );
-        }
-
-        if (Objects.nonNull(furnitureSearchCriteria.getHeight())) {
-            predicates.add(
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("height"), furnitureSearchCriteria.getHeight())
-            );
-        }
-
-        if (Objects.nonNull(furnitureSearchCriteria.getDiameter())) {
-            predicates.add(
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("diameter"), furnitureSearchCriteria.getDiameter())
-            );
-        }
-
-        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        return cb.and(predicates.toArray(new Predicate[0]));
     }
 }
