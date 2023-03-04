@@ -2,7 +2,7 @@ package com.example.dripchip.controllers;
 
 import com.example.dripchip.dto.AccountDTO;
 import com.example.dripchip.dto.AccountRegDTO;
-import com.example.dripchip.entity.Account;
+import com.example.dripchip.entities.Account;
 import com.example.dripchip.services.AccountRegistrationService;
 import com.example.dripchip.utils.EmailValidator;
 import com.example.dripchip.utils.StringUtil;

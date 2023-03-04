@@ -1,9 +1,9 @@
 package com.example.dripchip.utils;
 
 import com.example.dripchip.dto.AnimalDTO;
-import com.example.dripchip.entity.Animal;
-import com.example.dripchip.entity.AnimalType;
-import com.example.dripchip.entity.AnimalVisitedLocation;
+import com.example.dripchip.entities.Animal;
+import com.example.dripchip.entities.AnimalType;
+import com.example.dripchip.entities.AnimalVisitedLocation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

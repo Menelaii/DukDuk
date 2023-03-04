@@ -1,6 +1,6 @@
 package com.example.dripchip.security;
 
-import com.example.dripchip.entity.Account;
+import com.example.dripchip.entities.Account;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

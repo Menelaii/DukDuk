@@ -1,4 +1,4 @@
-package com.example.dripchip.entity;
+package com.example.dripchip.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.example.dripchip.repositories;
 
-import com.example.dripchip.entity.LocationPoint;
+import com.example.dripchip.entities.LocationPoint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package com.example.dripchip.services;
 
 import com.example.dripchip.SearchCriterias.LocationPointSearchCriteria;
-import com.example.dripchip.entity.LocationPoint;
+import com.example.dripchip.entities.LocationPoint;
 import com.example.dripchip.exceptions.EntityNotFoundException;
 import com.example.dripchip.repositories.LocationPointsRepository;
 import org.springframework.beans.factory.annotation.Autowired;

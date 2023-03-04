@@ -1,9 +1,6 @@
 package com.example.dripchip.controllers;
 
-import com.example.dripchip.SearchCriterias.LocationPointSearchCriteria;
 import com.example.dripchip.dto.LocationPointDTO;
-import com.example.dripchip.entity.LocationPoint;
-import com.example.dripchip.repositories.LocationPointsRepository;
 import com.example.dripchip.services.LocationPointsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatusCode;

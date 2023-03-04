@@ -1,6 +1,6 @@
 package com.example.dripchip.dto;
 
-import com.example.dripchip.entity.LocationPoint;
+import com.example.dripchip.entities.LocationPoint;
 import lombok.Getter;
 import lombok.Setter;
 

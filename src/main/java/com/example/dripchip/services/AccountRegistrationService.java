@@ -1,6 +1,6 @@
 package com.example.dripchip.services;
 
-import com.example.dripchip.entity.Account;
+import com.example.dripchip.entities.Account;
 import com.example.dripchip.repositories.AccountRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

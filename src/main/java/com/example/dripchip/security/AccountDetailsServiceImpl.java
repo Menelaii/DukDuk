@@ -1,6 +1,6 @@
 package com.example.dripchip.security;
 
-import com.example.dripchip.entity.Account;
+import com.example.dripchip.entities.Account;
 import com.example.dripchip.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

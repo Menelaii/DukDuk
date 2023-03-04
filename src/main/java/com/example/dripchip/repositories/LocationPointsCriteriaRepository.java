@@ -1,7 +1,7 @@
 package com.example.dripchip.repositories;
 
 import com.example.dripchip.SearchCriterias.LocationPointSearchCriteria;
-import com.example.dripchip.entity.LocationPoint;
+import com.example.dripchip.entities.LocationPoint;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;

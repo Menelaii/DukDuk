@@ -1,6 +1,6 @@
 package com.example.dripchip.services;
 
-import com.example.dripchip.entity.AnimalType;
+import com.example.dripchip.entities.AnimalType;
 import com.example.dripchip.exceptions.EntityNotFoundException;
 import com.example.dripchip.repositories.AnimalTypesRepositotory;
 import org.springframework.beans.factory.annotation.Autowired;
