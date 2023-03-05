@@ -1,4 +1,4 @@
-package com.example.dripchip.SearchCriterias;
+package com.example.dripchip.searchCriterias;
 
 import lombok.Getter;
 import lombok.Setter;

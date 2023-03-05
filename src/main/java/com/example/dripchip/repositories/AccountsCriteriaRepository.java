@@ -1,7 +1,7 @@
 package com.example.dripchip.repositories;
 
-import com.example.dripchip.SearchCriterias.AccountSearchCriteria;
-import com.example.dripchip.SearchCriterias.XPage;
+import com.example.dripchip.searchCriterias.AccountSearchCriteria;
+import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.entities.Account;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ import java.util.Objects;
 public class AccountsCriteriaRepository {
     @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder cb;
+    private final CriteriaBuilder cb;
 
     public AccountsCriteriaRepository() {
         cb = entityManager.getCriteriaBuilder();

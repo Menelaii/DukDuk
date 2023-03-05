@@ -1,7 +1,7 @@
 package com.example.dripchip.controllers;
 
-import com.example.dripchip.SearchCriterias.AccountSearchCriteria;
-import com.example.dripchip.SearchCriterias.XPage;
+import com.example.dripchip.searchCriterias.AccountSearchCriteria;
+import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.dto.AccountDTO;
 import com.example.dripchip.entities.Account;
 import com.example.dripchip.services.AccountsService;

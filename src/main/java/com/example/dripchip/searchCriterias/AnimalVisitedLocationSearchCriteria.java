@@ -1,4 +1,4 @@
-package com.example.dripchip.SearchCriterias;
+package com.example.dripchip.searchCriterias;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,9 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class LocationPointSearchCriteria {
+public class AnimalVisitedLocationSearchCriteria {
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
-    private Integer from;
-    private Integer size;
 }

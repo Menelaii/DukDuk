@@ -19,6 +19,6 @@ public class LocationPoint {
     private double longitude;
     @OneToMany(mappedBy = "chippingLocation")
     private List<Animal> animals;
-    @OneToOne(mappedBy = "locationPoint")
-    private AnimalVisitedLocation animalVisitedLocation;
+    @OneToMany(mappedBy = "locationPoint")
+    private List<AnimalVisitedLocation> animalVisitedLocation;
 }

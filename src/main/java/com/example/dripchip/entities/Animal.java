@@ -25,17 +25,14 @@ public class Animal {
     private LocalDateTime chippingDateTime;
     @Column(name = "death_date_time")
     private LocalDateTime deathDateTime;
-
     @ManyToMany(mappedBy = "animals")
     private List<AnimalType> animalTypes;
-
     @ManyToOne
     @JoinColumn(name = "chipper_id", referencedColumnName = "id")
     private Account chipper;
     @ManyToOne
     @JoinColumn(name = "chipping_location_id", referencedColumnName = "id")
     private LocationPoint chippingLocation;
-
     @OneToMany(mappedBy = "locationPoint")
     private List<AnimalVisitedLocation> visitedLocations;
 }

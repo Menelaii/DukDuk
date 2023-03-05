@@ -1,7 +1,7 @@
 package com.example.dripchip.repositories;
 
-import com.example.dripchip.SearchCriterias.AnimalSearchCriteria;
-import com.example.dripchip.SearchCriterias.XPage;
+import com.example.dripchip.searchCriterias.AnimalSearchCriteria;
+import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.entities.Animal;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,7 +19,7 @@ import java.util.Objects;
 public class AnimalCriteriaRepository {
     @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder cb;
+    private final CriteriaBuilder cb;
 
     public AnimalCriteriaRepository() {
         cb = entityManager.getCriteriaBuilder();
@@ -50,7 +50,7 @@ public class AnimalCriteriaRepository {
     private Predicate getPredicate(AnimalSearchCriteria searchCriteria, Root<Animal> root) {
         List<Predicate> predicates = new ArrayList<>();
 
-        Path<LocalDateTime> chippingDateTime = root.<LocalDateTime>get("chippingDateTime");
+        Path<LocalDateTime> chippingDateTime = root.get("chippingDateTime");
         Path<Integer> chipperId = root.get("chipper").get("id");
         Path<Long> chippingLocationId = root.get("chippingLocation").get("id");
         Path<String> lifeStatus = root.get("lifeStatus");

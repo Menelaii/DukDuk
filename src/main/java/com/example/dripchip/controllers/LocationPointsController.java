@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/locations")
 public class LocationPointsController {
-
     private final LocationPointsService locationPointsService;
     private final ModelMapper modelMapper;
 
@@ -21,9 +20,6 @@ public class LocationPointsController {
         this.locationPointsService = locationPointsService;
         this.modelMapper = modelMapper;
     }
-
-
-
 
     @GetMapping("/{id}")
     public ResponseEntity<LocationPointDTO> findOne(@PathVariable("id") Long id) {

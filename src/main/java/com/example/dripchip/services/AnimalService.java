@@ -1,7 +1,7 @@
 package com.example.dripchip.services;
 
-import com.example.dripchip.SearchCriterias.AnimalSearchCriteria;
-import com.example.dripchip.SearchCriterias.XPage;
+import com.example.dripchip.searchCriterias.AnimalSearchCriteria;
+import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.entities.Animal;
 import com.example.dripchip.exceptions.EntityNotFoundException;
 import com.example.dripchip.repositories.AnimalCriteriaRepository;

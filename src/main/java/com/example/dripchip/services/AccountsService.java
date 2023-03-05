@@ -1,7 +1,7 @@
 package com.example.dripchip.services;
 
-import com.example.dripchip.SearchCriterias.AccountSearchCriteria;
-import com.example.dripchip.SearchCriterias.XPage;
+import com.example.dripchip.searchCriterias.AccountSearchCriteria;
+import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.entities.Account;
 import com.example.dripchip.exceptions.EntityNotFoundException;
 import com.example.dripchip.repositories.AccountRepository;

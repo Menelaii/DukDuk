@@ -16,7 +16,10 @@ public class AnimalVisitedLocation {
     private Long id;
     @Column(name = "date_time_of_visit_location_point")
     private LocalDateTime dateTimeOfVisitLocationPoint;
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "animal_id", referencedColumnName = "id")
+    private Animal animal;
+    @ManyToOne
     @JoinColumn(name = "location_point_id", referencedColumnName = "id")
     private LocationPoint locationPoint;
 }
