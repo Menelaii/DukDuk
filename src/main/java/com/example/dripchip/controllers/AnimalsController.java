@@ -11,7 +11,7 @@ import com.example.dripchip.services.AnimalService;
 import com.example.dripchip.services.AnimalVisitedLocationsService;
 import com.example.dripchip.utils.AnimalMapper;
 import com.example.dripchip.utils.AnimalValidator;
-import org.modelmapper.ModelMapper;
+import com.example.dripchip.utils.AnimalVisitedLocationsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +25,17 @@ import java.util.stream.Collectors;
 public class AnimalsController {
     private final AnimalService animalService;
     private final AnimalMapper animalMapper;
+    private final AnimalVisitedLocationsMapper visitedLocationsMapper;
     private final AnimalVisitedLocationsService animalVisitedLocationsService;
-    private final ModelMapper modelMapper;
 
     @Autowired
     public AnimalsController(AnimalService animalService, AnimalMapper animalMapper,
-                             AnimalVisitedLocationsService animalVisitedLocationService,
-                             ModelMapper modelMapper) {
+                             AnimalVisitedLocationsMapper animalVisitedLocationsMapper,
+                             AnimalVisitedLocationsService animalVisitedLocationService) {
         this.animalService = animalService;
         this.animalMapper = animalMapper;
+        this.visitedLocationsMapper = animalVisitedLocationsMapper;
         this.animalVisitedLocationsService = animalVisitedLocationService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/{id}")
@@ -83,7 +83,7 @@ public class AnimalsController {
                 animalVisitedLocationsService.findWithFilters(page, searchCriteria, id);
         List<AnimalVisitedLocationDTO> dtos = visitedLocations
                 .stream()
-                .map(v -> modelMapper.map(v, AnimalVisitedLocationDTO.class))
+                .map(visitedLocationsMapper::toDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);

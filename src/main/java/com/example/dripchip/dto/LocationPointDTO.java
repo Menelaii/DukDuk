@@ -9,5 +9,5 @@ public class LocationPointDTO {
 
     private Long id;
     private Double latitude;
-    private Double longitube;
+    private Double longitude;
 }
