@@ -77,6 +77,8 @@ public class AnimalsController {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
 
+        page.setSortBy("dateTimeOfVisitLocationPoint");
+
         List<AnimalVisitedLocation> visitedLocations =
                 animalVisitedLocationsService.findWithFilters(page, searchCriteria, id);
         List<AnimalVisitedLocationDTO> dtos = visitedLocations
