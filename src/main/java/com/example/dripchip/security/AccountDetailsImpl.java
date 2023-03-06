@@ -50,4 +50,8 @@ public class AccountDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Integer getAccountId(){
+        return account.getId();
+    }
 }

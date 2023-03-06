@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AnimalTypeDTO extends AnimalTypeShortDTO{
-    private Long id;
+public class LocationPointShortDTO {
+    private Double latitude;
+    private Double longitude;
 }

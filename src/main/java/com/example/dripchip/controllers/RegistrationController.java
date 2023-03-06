@@ -3,9 +3,8 @@ package com.example.dripchip.controllers;
 import com.example.dripchip.dto.AccountDTO;
 import com.example.dripchip.dto.AccountRegDTO;
 import com.example.dripchip.entities.Account;
-import com.example.dripchip.services.AccountRegistrationService;
-import com.example.dripchip.utils.EmailValidator;
-import com.example.dripchip.utils.StringUtil;
+import com.example.dripchip.services.AccountsService;
+import com.example.dripchip.utils.AccountValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class RegistrationController {
-    private final AccountRegistrationService registrationService;
+    private final AccountsService service;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public RegistrationController(AccountRegistrationService registrationService, ModelMapper modelMapper) {
-        this.registrationService = registrationService;
+    public RegistrationController(AccountsService service, ModelMapper modelMapper) {
+        this.service = service;
         this.modelMapper = modelMapper;
     }
 
@@ -32,25 +31,19 @@ public class RegistrationController {
             return new ResponseEntity<>(null, HttpStatus.valueOf(403));
         }
 
-        if (!isValid(accountRegDTO)) {
+        Account account = modelMapper.map(accountRegDTO, Account.class);
+
+        if (AccountValidator.isInvalid(account)) {
             return new ResponseEntity<>(null, HttpStatus.valueOf(400));
         }
 
-        if (registrationService.isEmailAlreadyTaken(accountRegDTO.getEmail())) {
+        if (service.isEmailAlreadyTaken(accountRegDTO.getEmail())) {
             return new ResponseEntity<>(null, HttpStatus.valueOf(409));
         }
 
-        Account registeredAccount = registrationService.register(modelMapper.map(accountRegDTO, Account.class));
+        Account registeredAccount = service.register(modelMapper.map(accountRegDTO, Account.class));
 
         return new ResponseEntity<>(modelMapper.map(registeredAccount, AccountDTO.class),
                 HttpStatus.valueOf(201));
-    }
-
-    private boolean isValid(AccountRegDTO dto) {
-        return StringUtil.isBlankOrEmpty(dto.getFirstName())
-                || StringUtil.isBlankOrEmpty(dto.getLastName())
-                || StringUtil.isBlankOrEmpty(dto.getFirstName())
-                || StringUtil.isBlankOrEmpty(dto.getPassword())
-                || EmailValidator.isValid(dto.getEmail());
     }
 }

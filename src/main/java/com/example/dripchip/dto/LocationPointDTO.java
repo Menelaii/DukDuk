@@ -5,9 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LocationPointDTO {
+public class LocationPointDTO  extends LocationPointShortDTO {
 
     private Long id;
-    private Double latitude;
-    private Double longitude;
 }

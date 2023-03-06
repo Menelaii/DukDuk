@@ -15,8 +15,8 @@ public class LocationPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+    private Double longitude;
     @OneToMany(mappedBy = "chippingLocation")
     private List<Animal> animals;
     @OneToMany(mappedBy = "locationPoint")

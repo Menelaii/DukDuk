@@ -55,8 +55,8 @@ public class HeaderAuthenticationFilter extends OncePerRequestFilter {
 
         System.out.println(token);//<Base64 encoded username and password>
 
-        byte[] decodedbytes = Base64.getDecoder().decode(token.getBytes());
-        String decodedString = new String(decodedbytes);
+        byte[] decodedBytes = Base64.getDecoder().decode(token.getBytes());
+        String decodedString = new String(decodedBytes);
         String[] emailAndPassword = decodedString.split(":");
 
         try {

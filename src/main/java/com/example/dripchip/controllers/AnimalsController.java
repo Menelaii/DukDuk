@@ -40,8 +40,8 @@ public class AnimalsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AnimalDTO> findOne(@PathVariable("id") Long id) {
-        if( id == null || id <= 0){
-            return  new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
+        if (id == null || id <= 0) {
+            return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
 
         return ResponseEntity.ok(animalMapper.toDto(animalService.findOne(id)));
@@ -54,7 +54,7 @@ public class AnimalsController {
                 || page.getSize() == null || page.getSize() <= 0
                 || !AnimalValidator.isValidGender(searchCriteria.getGender())
                 || !AnimalValidator.isValidLifeStatus(searchCriteria.getLifeStatus())) {
-            return  new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
+            return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
 
         List<Animal> animals = animalService.findWithFilters(page, searchCriteria);
@@ -67,11 +67,10 @@ public class AnimalsController {
     }
 
 
-
     @GetMapping("/{id}/locations")
     public ResponseEntity<List<AnimalVisitedLocationDTO>> findOne(@PathVariable("id") Long id,
-                                                            AnimalVisitedLocationSearchCriteria searchCriteria,
-                                                            XPage page){
+                                                                  AnimalVisitedLocationSearchCriteria searchCriteria,
+                                                                  XPage page) {
         //TODO проверка дат на соответствию стандарту
         if (id == null || id <= 0 || page.getFrom() < 0 || page.getSize() <= 0) {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
