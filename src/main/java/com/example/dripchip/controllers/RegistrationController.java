@@ -4,7 +4,7 @@ import com.example.dripchip.dto.AccountDTO;
 import com.example.dripchip.dto.AccountRegDTO;
 import com.example.dripchip.entities.Account;
 import com.example.dripchip.services.AccountsService;
-import com.example.dripchip.utils.AccountValidator;
+import com.example.dripchip.validators.AccountValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

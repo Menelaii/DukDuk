@@ -1,14 +1,12 @@
 package com.example.dripchip.services;
 
 import com.example.dripchip.entities.AnimalType;
-import com.example.dripchip.entities.LocationPoint;
-import com.example.dripchip.exceptions.EntityAlreadyExists;
+import com.example.dripchip.exceptions.EntityAlreadyExistsException;
 import com.example.dripchip.exceptions.EntityConnectedException;
 import com.example.dripchip.exceptions.EntityNotFoundException;
 import com.example.dripchip.exceptions.InvalidEntityException;
 import com.example.dripchip.repositories.AnimalTypesRepository;
-import com.example.dripchip.utils.IdValidator;
-import com.example.dripchip.utils.StringUtil;
+import com.example.dripchip.validators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +33,6 @@ public class AnimalTypesService {
         return animal.get();
     }
 
-
     @Transactional
     public AnimalType save(AnimalType animalType){
 
@@ -46,8 +43,9 @@ public class AnimalTypesService {
         return repository.save(animalType);
     }
 
+    @Transactional
     public AnimalType update(Long id, AnimalType animalType) {
-        IdValidator.throwIfInvalid(id);
+        Validator.throwIfInvalidId(id);
 
         throwIfInvalid(animalType.getType());
 
@@ -59,10 +57,10 @@ public class AnimalTypesService {
         return repository.save(animalType);
     }
 
-
-
+    @Transactional
     public void delete(Long id){
-        IdValidator.throwIfInvalid(id);
+        Validator.throwIfInvalidId(id);
+
         Optional<AnimalType> animalTypeContainer = repository.findById(id);
         if (animalTypeContainer.isEmpty()){
             throw  new EntityNotFoundException();
@@ -75,7 +73,6 @@ public class AnimalTypesService {
         repository.deleteById(id);
     }
 
-
     private void throwIfExists(Long id) {
         if(repository.existsById(id)){
             throw new EntityNotFoundException();
@@ -84,12 +81,12 @@ public class AnimalTypesService {
 
     private void throwIfAlreadyExistsByType(AnimalType animalType) {
         if (repository.findByType(animalType.getType()).isPresent()){
-            throw new EntityAlreadyExists();
+            throw new EntityAlreadyExistsException();
         }
     }
 
     private void throwIfInvalid(String type) {
-        if(StringUtil.isBlankOrEmpty(type)){
+        if(Validator.isBlankOrEmpty(type)){
             throw new InvalidEntityException();
         }
     }

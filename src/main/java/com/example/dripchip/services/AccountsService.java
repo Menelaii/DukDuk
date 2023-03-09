@@ -1,14 +1,14 @@
 package com.example.dripchip.services;
 
-import com.example.dripchip.exceptions.*;
-import com.example.dripchip.searchCriterias.AccountSearchCriteria;
-import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.entities.Account;
+import com.example.dripchip.exceptions.*;
 import com.example.dripchip.repositories.AccountRepository;
 import com.example.dripchip.repositories.AccountsCriteriaRepository;
+import com.example.dripchip.searchCriterias.AccountSearchCriteria;
+import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.security.AccountDetailsImpl;
-import com.example.dripchip.utils.AccountValidator;
-import com.example.dripchip.utils.IdValidator;
+import com.example.dripchip.validators.AccountValidator;
+import com.example.dripchip.validators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,7 +64,7 @@ public class AccountsService {
 
     @Transactional
     public Account update(Integer id, Account account) {
-        IdValidator.throwIfInvalid(id);
+        Validator.throwIfInvalidId(id);
         throwIfInvalid(account);
         throw403IfNotExists(id);
         throwIfNotOwned(account);
@@ -76,17 +76,16 @@ public class AccountsService {
 
     @Transactional
     public void deleteById(Integer id) {
-        IdValidator.throwIfInvalid(id);
+        Validator.throwIfInvalidId(id);
 
-        Optional<Account> account = repository.findById(id);
+        Account account = repository.findById(id)
+                .orElseThrow(NothingToChangeException::new);
 
-        throw403IfNotExists(account);
-
-        if (!account.get().getAnimals().isEmpty()) {
+        if (!account.getAnimals().isEmpty()) {
             throw new EntityConnectedException();
         }
 
-        throwIfNotOwned(account.get());
+        throwIfNotOwned(account);
 
         repository.deleteById(id);
     }
@@ -98,19 +97,8 @@ public class AccountsService {
         return currentAccount.getAccountId().equals(account.getId());
     }
 
-    private boolean isAuthenticated() {
-        return SecurityContextHolder
-                .getContext().getAuthentication().isAuthenticated();
-    }
-
     private void throw403IfNotExists(Integer id) {
         if (!repository.existsById(id)) {
-            throw new NothingToChangeException();
-        }
-    }
-
-    private void throw403IfNotExists(Optional<Account> container) {
-        if (container.isEmpty()) {
             throw new NothingToChangeException();
         }
     }

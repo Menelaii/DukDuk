@@ -11,10 +11,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "animal")
-public class Animal {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Animal extends AbstractEntity<Long> {
     private float weight;
     private float length;
     private float height;

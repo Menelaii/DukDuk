@@ -1,12 +1,14 @@
-package com.example.dripchip.utils;
+package com.example.dripchip.mappers;
 
 import com.example.dripchip.dto.AnimalDTO;
-import com.example.dripchip.entities.Animal;
-import com.example.dripchip.entities.AnimalType;
-import com.example.dripchip.entities.AnimalVisitedLocation;
+import com.example.dripchip.dto.AnimalShortDTO;
+import com.example.dripchip.entities.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Component
 public class AnimalMapper {
@@ -36,5 +38,31 @@ public class AnimalMapper {
         animalDTO.setVisitedLocations(locationsIds);
 
         return animalDTO;
+    }
+
+    public Animal toEntity(AnimalShortDTO shortDTO) {
+        Animal entity = modelMapper.map(shortDTO, Animal.class);
+
+        entity.setAnimalTypes(
+                Arrays.stream(shortDTO.getAnimalTypes())
+                        .map(AnimalType::new)
+                        .collect(Collectors.toList())
+        );
+
+        entity.setChipper(
+                new Account(shortDTO.getChipperId())
+        );
+
+        entity.setChippingLocation(
+                new LocationPoint(shortDTO.getChippingLocationId())
+        );
+
+        entity.setVisitedLocations(
+                Arrays.stream(shortDTO.getVisitedLocations())
+                        .map(AnimalVisitedLocation::new)
+                        .collect(Collectors.toList())
+        );
+
+        return entity;
     }
 }

@@ -2,6 +2,7 @@ package com.example.dripchip.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,18 +11,19 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "animel_type")
-public class AnimalType {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+@NoArgsConstructor
+public class AnimalType extends AbstractEntity<Long> {
     private String type;
 
     @ManyToMany
     @JoinTable(
             name = "animal_animal_type",
             joinColumns = @JoinColumn(name = "animal_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "animal_type_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "animal_type_id", referencedColumnName = "id")
+    )
     private List<Animal> animals;
+
+    public AnimalType(Long id) {
+        super(id);
+    }
 }

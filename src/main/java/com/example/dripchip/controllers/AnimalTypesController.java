@@ -37,8 +37,8 @@ public class AnimalTypesController {
         AnimalType animalType = service.save(modelMapper.map(animalTypeShortDTO,
                 AnimalType.class));
 
-        return new ResponseEntity<AnimalTypeDTO>(modelMapper.map(animalType, AnimalTypeDTO.class),
-        HttpStatusCode.valueOf(201));
+        return new ResponseEntity<>(modelMapper.map(animalType, AnimalTypeDTO.class),
+                HttpStatusCode.valueOf(201));
     }
 
     @PutMapping("/{id}")
@@ -55,5 +55,4 @@ public class AnimalTypesController {
         service.delete(id);
         return ResponseEntity.ok().build();
     }
-
 }

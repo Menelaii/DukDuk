@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AnimalVisitedLocationDTO extends AnimalVisitedLocationShortDTO {
+public class AnimalVisitedLocationShortDTO {
     private Long id;
+    private Long locationPointId;
 }

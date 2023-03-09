@@ -4,10 +4,10 @@ import com.example.dripchip.entities.LocationPoint;
 import com.example.dripchip.exceptions.EntityConnectedException;
 import com.example.dripchip.exceptions.EntityNotFoundException;
 import com.example.dripchip.exceptions.InvalidEntityException;
-import com.example.dripchip.exceptions.EntityAlreadyExists;
+import com.example.dripchip.exceptions.EntityAlreadyExistsException;
 import com.example.dripchip.repositories.LocationPointsRepository;
-import com.example.dripchip.utils.IdValidator;
-import com.example.dripchip.utils.LocationPointValidator;
+import com.example.dripchip.validators.LocationPointValidator;
+import com.example.dripchip.validators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,8 @@ public class LocationPointsService {
     }
 
     public LocationPoint update(Long id, LocationPoint locationPoint){
-        IdValidator.throwIfInvalid(id);
+        Validator.throwIfInvalidId(id);
+
         if(LocationPointValidator.isInvalid(locationPoint)){
             throw new InvalidEntityException();
         }
@@ -63,7 +64,8 @@ public class LocationPointsService {
     }
 
     public void delete(Long id){
-        IdValidator.throwIfInvalid(id);
+        Validator.throwIfInvalidId(id);
+
         Optional<LocationPoint> locationPointContainer = repository.findById(id);
         if (locationPointContainer.isEmpty()){
             throw  new EntityNotFoundException();
@@ -83,7 +85,7 @@ public class LocationPointsService {
                         locationPoint.getLongitude());
 
         if (locationPointContainer.isPresent()){
-            throw new EntityAlreadyExists();
+            throw new EntityAlreadyExistsException();
         }
     }
 

@@ -1,17 +1,15 @@
 package com.example.dripchip.controllers;
 
-import com.example.dripchip.searchCriterias.AnimalSearchCriteria;
-import com.example.dripchip.searchCriterias.AnimalVisitedLocationSearchCriteria;
-import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.dto.AnimalDTO;
-import com.example.dripchip.dto.AnimalVisitedLocationDTO;
+import com.example.dripchip.dto.AnimalShortDTO;
+import com.example.dripchip.dto.AnimalTypeUpdateDTO;
 import com.example.dripchip.entities.Animal;
-import com.example.dripchip.entities.AnimalVisitedLocation;
+import com.example.dripchip.searchCriterias.AnimalSearchCriteria;
+import com.example.dripchip.searchCriterias.XPage;
 import com.example.dripchip.services.AnimalService;
-import com.example.dripchip.services.AnimalVisitedLocationsService;
-import com.example.dripchip.utils.AnimalMapper;
-import com.example.dripchip.utils.AnimalValidator;
-import com.example.dripchip.utils.AnimalVisitedLocationsMapper;
+import com.example.dripchip.mappers.AnimalMapper;
+import com.example.dripchip.validators.AnimalValidator;
+import com.example.dripchip.validators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -23,19 +21,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/animals")
 public class AnimalsController {
-    private final AnimalService animalService;
-    private final AnimalMapper animalMapper;
-    private final AnimalVisitedLocationsMapper visitedLocationsMapper;
-    private final AnimalVisitedLocationsService animalVisitedLocationsService;
+    private final AnimalService service;
+    private final AnimalMapper mapper;
 
     @Autowired
-    public AnimalsController(AnimalService animalService, AnimalMapper animalMapper,
-                             AnimalVisitedLocationsMapper animalVisitedLocationsMapper,
-                             AnimalVisitedLocationsService animalVisitedLocationService) {
-        this.animalService = animalService;
-        this.animalMapper = animalMapper;
-        this.visitedLocationsMapper = animalVisitedLocationsMapper;
-        this.animalVisitedLocationsService = animalVisitedLocationService;
+    public AnimalsController(AnimalService animalService, AnimalMapper animalMapper) {
+        this.service = animalService;
+        this.mapper = animalMapper;
     }
 
     @GetMapping("/{id}")
@@ -44,12 +36,11 @@ public class AnimalsController {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
 
-        return ResponseEntity.ok(animalMapper.toDto(animalService.findOne(id)));
+        return ResponseEntity.ok(mapper.toDto(service.findOne(id)));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<AnimalDTO>> search(AnimalSearchCriteria searchCriteria, XPage page) {
-        //todo check dates format iso-8601?
         if (page.getFrom() == null || page.getFrom() < 0
                 || page.getSize() == null || page.getSize() <= 0
                 || !AnimalValidator.isValidGender(searchCriteria.getGender())
@@ -57,34 +48,77 @@ public class AnimalsController {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
 
-        List<Animal> animals = animalService.findWithFilters(page, searchCriteria);
+        List<Animal> animals = service.findWithFilters(page, searchCriteria);
         List<AnimalDTO> animalDTOS = animals
                 .stream()
-                .map(animalMapper::toDto)
+                .map(mapper::toDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(animalDTOS);
     }
 
-
-    @GetMapping("/{id}/locations")
-    public ResponseEntity<List<AnimalVisitedLocationDTO>> findOne(@PathVariable("id") Long id,
-                                                                  AnimalVisitedLocationSearchCriteria searchCriteria,
-                                                                  XPage page) {
-        //TODO проверка дат на соответствию стандарту
-        if (id == null || id <= 0 || page.getFrom() < 0 || page.getSize() <= 0) {
+    @PostMapping
+    public ResponseEntity<AnimalDTO> save(@RequestBody AnimalShortDTO shortDTO) {
+        if (!AnimalValidator.isValid(shortDTO)) {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
 
-        page.setSortBy("dateTimeOfVisitLocationPoint");
+        if (Validator.hasDuplicates(shortDTO.getAnimalTypes())) {
+            return new ResponseEntity<>(null, HttpStatusCode.valueOf(409));
+        }
 
-        List<AnimalVisitedLocation> visitedLocations =
-                animalVisitedLocationsService.findWithFilters(page, searchCriteria, id);
-        List<AnimalVisitedLocationDTO> dtos = visitedLocations
-                .stream()
-                .map(visitedLocationsMapper::toDto)
-                .collect(Collectors.toList());
+        Animal entity = service.save(mapper.toEntity(shortDTO));
+        return new ResponseEntity<>(mapper.toDto(entity), HttpStatusCode.valueOf(201));
+    }
 
-        return ResponseEntity.ok(dtos);
+    @PutMapping("/{id}")
+    public ResponseEntity<AnimalDTO> update(@PathVariable("id") Long id, @RequestBody AnimalShortDTO shortDTO) {
+        Validator.throwIfInvalidId(id);
+
+        if (!AnimalValidator.isValid(shortDTO)) {
+            return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
+        }
+
+        Animal entity = mapper.toEntity(shortDTO);
+        return ResponseEntity.ok(mapper.toDto(service.update(id, entity)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        Validator.throwIfInvalidId(id);
+        service.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{animalId}/types/{typeId}")
+    public ResponseEntity<AnimalDTO> addType(@PathVariable("animalId") Long animalId,
+                                        @PathVariable("typeId") Long typeId) {
+        Validator.throwIfInvalidId(animalId);
+        Validator.throwIfInvalidId(typeId);
+
+        Animal updated = service.addType(animalId, typeId);
+        return new ResponseEntity<>(mapper.toDto(updated), HttpStatusCode.valueOf(201));
+    }
+
+    @PutMapping("/{animalId}/types")
+    public ResponseEntity<AnimalDTO> updateType(@PathVariable("animalId") Long animalId,
+                                             @RequestBody AnimalTypeUpdateDTO dto) {
+        Validator.throwIfInvalidId(animalId);
+        Validator.throwIfInvalidId(dto.getNewTypeId());
+        Validator.throwIfInvalidId(dto.getOldTypeId());
+
+        Animal updated = service.updateType(animalId, dto.getOldTypeId(), dto.getNewTypeId());
+        return ResponseEntity.ok(mapper.toDto(updated));
+    }
+
+    @DeleteMapping("/{animalId}/types/{typeId}")
+    public ResponseEntity<AnimalDTO> deleteType(@PathVariable("animalId") Long animalId,
+                                           @PathVariable("typeId") Long typeId) {
+        Validator.throwIfInvalidId(animalId);
+        Validator.throwIfInvalidId(typeId);
+
+        Animal updatedEntity = service.deleteType(animalId, typeId);
+
+        return ResponseEntity.ok(mapper.toDto(updatedEntity));
     }
 }
