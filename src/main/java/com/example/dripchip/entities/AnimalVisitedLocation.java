@@ -4,15 +4,21 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "AnimalVisitedLocation")
+@Table(name = "Animal_visited_locations")
 @NoArgsConstructor
-public class AnimalVisitedLocation extends AbstractEntity<Long> {
+public class AnimalVisitedLocation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
     @Column(name = "date_time_of_visit_location_point")
     private LocalDateTime dateTimeOfVisitLocationPoint;
     @ManyToOne
@@ -30,6 +36,19 @@ public class AnimalVisitedLocation extends AbstractEntity<Long> {
     }
 
     public AnimalVisitedLocation(Long id) {
-        super(id);
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        AnimalVisitedLocation that = (AnimalVisitedLocation) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

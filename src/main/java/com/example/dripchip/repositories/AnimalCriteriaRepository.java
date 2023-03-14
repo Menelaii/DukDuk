@@ -17,11 +17,11 @@ import java.util.Objects;
 
 @Repository
 public class AnimalCriteriaRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     private final CriteriaBuilder cb;
 
-    public AnimalCriteriaRepository() {
+    public AnimalCriteriaRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
         cb = entityManager.getCriteriaBuilder();
     }
 

@@ -17,11 +17,11 @@ import java.util.Objects;
 
 @Repository
 public class AccountsCriteriaRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     private final CriteriaBuilder cb;
 
-    public AccountsCriteriaRepository() {
+    public AccountsCriteriaRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
         cb = entityManager.getCriteriaBuilder();
     }
 

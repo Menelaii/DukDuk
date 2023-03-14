@@ -20,14 +20,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-public class SecurityConfig{
+public class SecurityConfig {
     private final AccountDetailsServiceImpl accountDetailsService;
-    private final HeaderAuthenticationFilter authenticationFilter;
 
     @Autowired
-    public SecurityConfig(AccountDetailsServiceImpl accountDetailsService, HeaderAuthenticationFilter authenticationFilter) {
+    public SecurityConfig(AccountDetailsServiceImpl accountDetailsService) {
         this.accountDetailsService = accountDetailsService;
-        this.authenticationFilter = authenticationFilter;
     }
 
     @Bean
@@ -42,7 +40,8 @@ public class SecurityConfig{
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new HeaderAuthenticationFilter(accountDetailsService,
+                        passwordEncoder()), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
