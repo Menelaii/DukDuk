@@ -10,6 +10,7 @@ import com.example.dripchip.security.AccountDetailsImpl;
 import com.example.dripchip.validators.AccountValidator;
 import com.example.dripchip.validators.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,35 +65,48 @@ public class AccountsService {
 
     @Transactional
     public Account update(Integer id, Account account) {
+        account.setId(id);
+
         Validator.throwIfInvalidId(id);
         throwIfInvalid(account);
         throw403IfNotExists(id);
         throwIfNotOwned(account);
-        throwIfTaken(account.getEmail());
+//        throwIfTaken(account.getEmail());
 
-        account.setId(id);
         return repository.save(account);
     }
 
     @Transactional
     public void deleteById(Integer id) {
+        System.out.println("id = " + id);
+
         Validator.throwIfInvalidId(id);
 
+        System.out.println("find by id");
         Account account = repository.findById(id)
                 .orElseThrow(NothingToChangeException::new);
-
+        System.out.println("after find by id");
         if (!account.getAnimals().isEmpty()) {
             throw new EntityConnectedException();
         }
 
-        throwIfNotOwned(account);
+        //TODO проверка на админа вернуть
+//        throwIfNotOwned(account);
 
         repository.deleteById(id);
+    }
+
+    public boolean isLogged() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return null != authentication && !("anonymousUser").equals(authentication.getName());
     }
 
     private boolean isAuthenticated(Account account) {
         AccountDetailsImpl currentAccount = (AccountDetailsImpl) SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal();
+
+        System.out.println("logged ac id " + currentAccount.getAccountId());
+        System.out.println("req ac id " + account.getId());
 
         return currentAccount.getAccountId().equals(account.getId());
     }
@@ -111,6 +125,7 @@ public class AccountsService {
 
     private void throwIfNotOwned(Account account) {
         if (!isAuthenticated(account)) {
+            System.out.println("acc is not owned");
             throw new AccountIsNotYoursException();
         }
     }

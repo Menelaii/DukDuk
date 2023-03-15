@@ -10,6 +10,6 @@ public class EmailValidator {
     }
 
     public static boolean isValid(String email) {
-        return pattern.matcher(email).matches();
+        return email != null && pattern.matcher(email).matches();
     }
 }

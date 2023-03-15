@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Validator {
-    public static <T extends Number & Comparable<T>> boolean isNotNullAndGreaterThanZero(T id) {
-        return id != null && id.doubleValue() > 0;
+    public static <T extends Number & Comparable<T>> boolean isNotNullAndGreaterThanZero(T number) {
+        return number != null && number.doubleValue() > 0;
     }
 
     public static <T extends Number> boolean isNotNullOrEmpty(T[] array) {

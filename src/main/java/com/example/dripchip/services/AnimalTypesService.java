@@ -24,13 +24,8 @@ public class AnimalTypesService {
     }
 
     public AnimalType findOne(long id) {
-        Optional<AnimalType> animal = repository.findById(id);
-
-        if(animal.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
-
-        return animal.get();
+        return repository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional
@@ -74,7 +69,7 @@ public class AnimalTypesService {
     }
 
     private void throwIfExists(Long id) {
-        if(repository.existsById(id)){
+        if(!repository.existsById(id)){
             throw new EntityNotFoundException();
         }
     }

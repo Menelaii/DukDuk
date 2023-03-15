@@ -8,6 +8,6 @@ public class AccountValidator {
                 || Validator.isBlankOrEmpty(account.getLastName())
                 || Validator.isBlankOrEmpty(account.getFirstName())
                 || Validator.isBlankOrEmpty(account.getPassword())
-                || EmailValidator.isValid(account.getEmail());
+                || !EmailValidator.isValid(account.getEmail());
     }
 }

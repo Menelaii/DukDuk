@@ -46,7 +46,9 @@ public class LocationPointsService {
         return repository.save(locationPoint);
     }
 
+    @Transactional
     public LocationPoint update(Long id, LocationPoint locationPoint){
+        System.out.println("loc point serive updat=========================");
         Validator.throwIfInvalidId(id);
 
         if(LocationPointValidator.isInvalid(locationPoint)){
@@ -63,6 +65,7 @@ public class LocationPointsService {
         return repository.save(locationPoint);
     }
 
+    @Transactional
     public void delete(Long id){
         Validator.throwIfInvalidId(id);
 
@@ -84,7 +87,7 @@ public class LocationPointsService {
                 .findByLatitudeAndLongitude(locationPoint.getLatitude(),
                         locationPoint.getLongitude());
 
-        if (locationPointContainer.isPresent()){
+        if (locationPointContainer.isPresent()){;
             throw new EntityAlreadyExistsException();
         }
     }

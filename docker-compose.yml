@@ -3,9 +3,11 @@ version: '3.9'
 services:
   # Сервис для разворачивания контейнера с базой данных
   database:
-    image: postgres:13.3
-    volumes:
-      - /var/lib/postgresql/data/
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+#    volumes:
+#      - /var/lib/postgresql/data/
     environment:
       - POSTGRES_DB=animal-chipization
       - POSTGRES_USER=user
@@ -20,9 +22,11 @@ services:
     depends_on:
       - database
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/animal-chipization
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/animal-chipization
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
+    links:
+      - "database:postgres"
 
 
   # Сервис для разворачивания контейнера с автотестами
@@ -35,6 +39,6 @@ services:
       - webapi
     environment:
       SERVER_URL: http://webapi:8080
-      STAGE: 0
+      STAGE: all
       # all - запуск всех тестов из трёх доступных этапов
       # 0, 1 или 2 - запуск тестов для соответствующего этапа

@@ -24,7 +24,7 @@ public class AnimalTypesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnimalTypeDTO> findOne(@PathVariable("id") Integer id) {
+    public ResponseEntity<AnimalTypeDTO> findOne(@PathVariable("id") Long id) {
         if (id == null || id <= 0) {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
@@ -44,6 +44,7 @@ public class AnimalTypesController {
     @PutMapping("/{id}")
     public ResponseEntity<AnimalTypeDTO> update(@PathVariable("id") Long id,
                                    @RequestBody AnimalTypeShortDTO shortDTO) {
+        System.out.println("id : " + id);
         AnimalType animalType = service.update(id, modelMapper.map(shortDTO,
                 AnimalType.class));
 

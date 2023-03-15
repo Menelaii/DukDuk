@@ -35,8 +35,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .formLogin().disable()
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/registration").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
+//                .authorizeHttpRequests((authorize) -> authorize
+//                        .anyRequest().permitAll()
+//                        .requestMatchers("/registration").permitAll()
+//                        .anyRequest().authenticated())
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

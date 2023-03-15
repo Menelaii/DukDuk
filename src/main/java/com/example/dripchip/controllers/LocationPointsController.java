@@ -46,7 +46,7 @@ public class LocationPointsController {
                 LocationPoint.class)));
 
         return new ResponseEntity<>(modelMapper.map(locationPoint, LocationPointDTO.class),
-                HttpStatusCode.valueOf(409));
+                HttpStatusCode.valueOf(200));
     }
 
 

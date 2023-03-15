@@ -27,7 +27,10 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public ResponseEntity<AccountDTO> register(@RequestBody AccountRegDTO accountRegDTO) {
-        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+        if (service.isLogged()) {
+            System.out.println("уже залогинен 403");
+            System.out.println(SecurityContextHolder.getContext().getAuthentication());
+            System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
             return new ResponseEntity<>(null, HttpStatus.valueOf(403));
         }
 
@@ -37,7 +40,7 @@ public class RegistrationController {
             return new ResponseEntity<>(null, HttpStatus.valueOf(400));
         }
 
-        if (service.isEmailAlreadyTaken(accountRegDTO.getEmail())) {
+        if (service.isEmailAlreadyTaken(accountRegDTO.getEmail())) { //&& !accountRegDTO.getEmail().equals("admin@mail.ru")
             return new ResponseEntity<>(null, HttpStatus.valueOf(409));
         }
 

@@ -22,7 +22,7 @@ public class AnimalValidator {
                 && Validator.isNotNullAndGreaterThanZero(animal.getWeight())
                 && Validator.isNotNullAndGreaterThanZero(animal.getChipperId())
                 && Validator.isNotNullAndGreaterThanZero(animal.getChippingLocationId())
-                && Validator.isNotNullOrEmpty(animal.getAnimalTypes())
+//                && Validator.isNotNullOrEmpty(animal.getAnimalTypes())
                 && !Validator.hasNullElements(animal.getAnimalTypes())
                 && isValidGender(animal.getGender())
                 && isValidLifeStatus(animal.getLifeStatus());

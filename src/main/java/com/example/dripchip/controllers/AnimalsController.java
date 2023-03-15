@@ -41,10 +41,13 @@ public class AnimalsController {
 
     @GetMapping("/search")
     public ResponseEntity<List<AnimalDTO>> search(AnimalSearchCriteria searchCriteria, XPage page) {
-        if (page.getFrom() == null || page.getFrom() < 0
-                || page.getSize() == null || page.getSize() <= 0
-                || !AnimalValidator.isValidGender(searchCriteria.getGender())
-                || !AnimalValidator.isValidLifeStatus(searchCriteria.getLifeStatus())) {
+        if (page.getFrom() == null) page.setFrom(0);
+        if (page.getSize() == null) page.setSize(10);
+
+        if (page.getFrom() < 0
+                || page.getSize() <= 0
+                || (searchCriteria.getGender() != null && !AnimalValidator.isValidGender(searchCriteria.getGender()))
+                || (searchCriteria.getLifeStatus() != null && !AnimalValidator.isValidLifeStatus(searchCriteria.getLifeStatus()))) {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
 

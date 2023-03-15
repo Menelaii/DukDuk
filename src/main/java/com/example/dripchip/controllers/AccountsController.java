@@ -38,8 +38,10 @@ public class AccountsController {
 
     @GetMapping("/search")
     public ResponseEntity<List<AccountDTO>> search(AccountSearchCriteria searchCriteria, XPage page) {
-        if (page.getFrom() == null || page.getFrom() < 0
-                || page.getSize() == null || page.getSize() <= 0) {
+        if (page.getFrom() == null) page.setFrom(0);
+        if (page.getSize() == null) page.setSize(10);
+
+        if (page.getFrom() < 0 || page.getSize() <= 0) {
             return new ResponseEntity<>(null, HttpStatusCode.valueOf(400));
         }
 
@@ -55,7 +57,7 @@ public class AccountsController {
     @PutMapping("/{id}")
     public ResponseEntity<AccountDTO> update(@PathVariable("id") Integer id, @RequestBody AccountRegDTO accountRegDTO) {
         Account updated = service.update(id, modelMapper.map(accountRegDTO, Account.class));
-        return new ResponseEntity<>(modelMapper.map(updated, AccountDTO.class), HttpStatusCode.valueOf(201));
+        return new ResponseEntity<>(modelMapper.map(updated, AccountDTO.class), HttpStatusCode.valueOf(200));
     }
 
     @DeleteMapping("/{id}")
